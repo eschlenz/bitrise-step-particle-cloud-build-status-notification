@@ -1,0 +1,111 @@
+#
+# A couple of useful guides & docs:
+#
+# - Main Bitrise CLI docs: https://github.com/bitrise-io/bitrise/tree/master/_docs
+# - Step Development Guideline: https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
+# - Bitrise.yml format spec: https://github.com/bitrise-io/bitrise/blob/master/_docs/bitrise-yml-format-spec.md
+# - Bitrise docs: http://devcenter.bitrise.io/
+# - Bitrise CLI guides: http://devcenter.bitrise.io/bitrise-cli/
+
+title: |-
+  Particle Cloud Build Status Notification
+summary: |
+  Publish build statuses to the Particle Cloud (IoT).
+description: |
+  Use this step to publish a build's status to a topic in the Particle Cloud (IoT). For example, if you have a Particle Electron or Photon, you can have your build's status pushed to them.
+website: https://github.com/eschlenz/bitrise-step-particle-cloud-build-status-notification
+source_code_url: https://github.com/eschlenz/bitrise-step-particle-cloud-build-status-notification
+support_url: https://github.com/eschlenz/bitrise-step-particle-cloud-build-status-notification/issues
+host_os_tags:
+  - osx-10.10
+  - ubuntu-16.04
+
+# If this step should be available only for certain project types
+# just uncomment this `project_type_tags` section and include all the
+# project types supported by the step. If the step can be used for all
+# project types then you can just remove this section.
+# If no `project_type_tags` specified (or specified as an empty array)
+# that means the step can be used for any project type.
+# You can find more information about project type tags in the Step Development Guideline:
+# https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
+#
+# project_type_tags:
+#   - ios
+#   - macos
+#   - android
+#   - xamarin
+#   - react-native
+#   - cordova
+#   - ionic
+
+# Type tags are used for categorizing steps, for easier step discovery in Step Libraries.
+# You can find more information about type tags in the Step Development Guideline:
+# https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
+type_tags:
+  - notification
+
+is_requires_admin_user: true
+is_always_run: false
+is_skippable: false
+run_if: ""
+
+deps:
+  brew:
+  - name: git
+  - name: wget
+  - name: curl
+  apt_get:
+  - name: git
+  - name: wget
+  - name: curl
+
+
+toolkit:
+  bash:
+    entry_file: step.sh
+
+
+inputs:
+  - particle_topic_name: Default Value - "$PARTICLE_TOPIC_NAME"
+    opts:
+      title: "Particle Topic Name"
+      summary: The topic name that your Particle device is subscribed to for events.
+      description: |
+        If you have configured your Particle device to listen for events on a specific topic, 
+        you will have established a name for that topic. Specify that topic name here.
+      is_expand: true
+      is_required: true
+      value_options: []
+  - particle_api_access_token: Default Value - "$PARTICLE_API_ACCESS_TOKEN"
+    opts:
+      title: "Particle Cloud API Access Token"
+      summary: Your API access token to the Particle Cloud API. 
+      description:
+      is_expand: true
+      is_required: true
+      value_options: []
+  - particle_notification_ttl: Default Value - "$PARTICLE_NOTIFICATION_TTL"
+    opts:
+      title: "Notification TTL"
+      summary: TTL (time to live) for the notification published to your Particle topic.                     
+      description:  
+      is_expand: true
+      is_required: true
+      value_options: []
+  - particle_notification_private: Default Value - "$PARTICLE_NOTIFICATION_PRIVATE"
+    opts:
+      title: "Particle Notification Private"
+      summary: Whether your notification is private, and only targets your own topic. (If unsure, set to true).                     
+      description:  
+      is_expand: true
+      is_required: true
+      value_options: [true, false]
+#outputs:
+#  - EXAMPLE_STEP_OUTPUT:
+#    opts:
+#      title: "Example Step Output"
+#      summary: Summary. No more than 2-3 sentences.
+#      description: |
+#        Description of this output.
+#
+#        Can be Markdown formatted text.
